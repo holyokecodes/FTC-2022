@@ -31,6 +31,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.util.Encoder;
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
@@ -50,9 +51,14 @@ public class TeleOp2022 extends LinearOpMode {
     private DcMotor backRight;
     private DcMotor frontLeft;
     private DcMotor frontRight;
-    private Servo finger;
-    private DcMotorEx shooter;
-    private DcMotor intake;
+
+    private Encoder leftEncoder;
+    private Encoder rightEncoder;
+    private Encoder frontEncoder;
+
+    //private Servo finger;
+    //private DcMotorEx shooter;
+    //private DcMotor intake;
 
     private BNO055IMU imu;
     private ElapsedTime runtime = new ElapsedTime();
@@ -98,12 +104,13 @@ public class TeleOp2022 extends LinearOpMode {
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
 
-        finger = hardwareMap.get(Servo.class, "Finger");
-        shooter = hardwareMap.get(DcMotorEx.class, "Shooter");
-        intake = hardwareMap.get(DcMotor.class, "Intake");
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontRight"));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backLeft"));
+        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontLeft"));
+
 
         // Wait for the start button
-        telemetry.addData(">", "Press Start to have a call to adventure." );
+        telemetry.addData(">", "Press Start to have a call to adventure.");
         telemetry.update();
 
         gamepad1.setJoystickDeadzone(joystickDeadzone);
@@ -132,43 +139,30 @@ public class TeleOp2022 extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             double speedMultiplier = 1; //Multiplier for precision mode.
-            if (gamepad1.right_trigger > 0.5){
+            if (gamepad1.right_trigger > 0.5) {
                 speedMultiplier = 0.5;
                 telemetry.addData("Pesise Mode", "On");
             } else {
                 telemetry.addData("Pesise Mode", "Off");
             }
 
+
             Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-            /*
-            reset gyro.yaw ---
-
-            robotPower = hypot(joy1.x, joy1.y)
-            robotAngle = atan2(joy1.y, joy1.x) + gyro.yaw // might need an additional offset or flip the sign
-            rightX = joy2.x
-
-            frontLeft = robotPower * cos(robotAngle) + rightX
-            frontRight = robotPower * sin(robotAngle) - rightX
-            backLeft = robotPower * sin(robotAngle) + rightX
-            backRight = robotPower * cos(robotAngle) - rightX
-
-            frontLeftMotor.power(frontLeft)
-            frontRightMotor.power(frontRight)
-            backLeftMotor.power(backLeft)
-            backRightMotor.power(backRight)
-
-            motors.run()
-            */
-            double leftX  =  gamepad1.left_stick_x;
+            double leftX = gamepad1.left_stick_x;
             double leftY = gamepad1.left_stick_y;
             double rightX = gamepad1.right_stick_x;
 
             double robotPower = Math.hypot(leftX, leftY);
-            double robotAngle = Math.atan2(leftY, leftX) + Math.toRadians(45);
+            double robotAngle = Math.atan2(leftY, leftX) - Math.toRadians(225);
 
-            telemetry.addData("Joystick Angle", Math.toDegrees(robotAngle));
-            telemetry.addData("Angles (XYZ)", Math.toDegrees(angles.thirdAngle) + ", " + Math.toDegrees(angles.secondAngle) + ", " + Math.toDegrees(angles.firstAngle));
+//            telemetry.addData("Joystick Angle", Math.toDegrees(robotAngle));
+//            telemetry.addData("Angles (XYZ)", Math.toDegrees(angles.thirdAngle) + ", " + Math.toDegrees(angles.secondAngle) + ", " + Math.toDegrees(angles.firstAngle));
+
+            telemetry.addData("Front Encoder", frontEncoder.getCurrentPosition());
+            telemetry.addData("Left Encoder", leftEncoder.getCurrentPosition());
+            telemetry.addData("Right Encoder", frontEncoder.getCurrentPosition());
+
 
             double frontLeftPower = robotPower * Math.cos(robotAngle) + rightX;
             double frontRightPower = robotPower * Math.sin(robotAngle) - rightX;
@@ -180,11 +174,9 @@ public class TeleOp2022 extends LinearOpMode {
             frontLeft.setPower(-frontLeftPower * speedMultiplier);
             frontRight.setPower(frontRightPower * speedMultiplier);
 
-            checkButtons();
-
-            // slew the servo, according to the rampUp (direction) variable
+            /* slew the servo, according to the rampUp (direction) variable
             if (fingerState == 1) {
-                // Keep stepping up until we hit the max value.
+                Keep stepping up until we hit the max value.
                 position += ServoIncrement;
                 if (position >= MAX_POS ) {
                     position = MAX_POS;
@@ -223,7 +215,7 @@ public class TeleOp2022 extends LinearOpMode {
             telemetry.addData("Motor Power", "%5.2f", power);
             telemetry.addData("Servo Position", "%5.2f", position);
 
-            // Set the servo to the new position and pause;
+            /* Set the servo to the new position and pause;
             finger.setPosition(position);
 
             if (shooterOn){
@@ -240,39 +232,9 @@ public class TeleOp2022 extends LinearOpMode {
             idle();
 
             telemetry.addData("Status", "Running");
-            // telemetry.addData("angle", angles.firstAngle);
+            // telemetry.addData("angle", angles.firstAngle);*/
             telemetry.update();
         }
-    }
 
-    public void checkButtons() {
-        shooterButton = gamepad2.x;
-
-        if (shooterButton && !shooterButtonBefore){
-            shooterOn = !shooterOn;
-        }
-        /*telemetry.addData("Current Shooter", shooterButton);
-        telemetry.addData("Previous Shooter", shooterButtonBefore);*/
-        telemetry.addData("Shooter", shooterOn);
-
-        intakeButton = gamepad1.left_trigger > 0.5;
-        if (intakeButton && !intakeButtonBefore){
-            intakeOn = !intakeOn;
-        }
-        /*telemetry.addData("Current Intake", intakeButton);
-        telemetry.addData("Previous Intake", intakeButtonBefore);*/
-        telemetry.addData("Intake", intakeOn);
-
-        fingerButton = gamepad2.a;
-        if (fingerButton && !fingerButtonBefore && fingerState == 0){
-            fingerState = 1;
-        }
-        /*telemetry.addData("Current Finger", fingerButton);
-        telemetry.addData("Previous Finger", fingerButtonBefore);*/
-        telemetry.addData("Finger State", fingerState);
-
-        fingerButtonBefore = fingerButton;
-        intakeButtonBefore = intakeButton;
-        shooterButtonBefore = shooterButton;
     }
 }
