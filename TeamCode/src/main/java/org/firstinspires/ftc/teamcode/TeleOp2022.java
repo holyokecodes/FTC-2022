@@ -31,7 +31,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.util.Encoder;
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
@@ -52,9 +51,9 @@ public class TeleOp2022 extends LinearOpMode {
     private DcMotor frontLeft;
     private DcMotor frontRight;
 
-    private Encoder leftEncoder;
-    private Encoder rightEncoder;
-    private Encoder frontEncoder;
+    private DcMotorEx leftEncoder;
+    private DcMotorEx rightEncoder;
+    private DcMotorEx frontEncoder;
 
     //private Servo finger;
     //private DcMotorEx shooter;

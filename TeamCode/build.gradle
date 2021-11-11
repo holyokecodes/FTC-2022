@@ -10,7 +10,12 @@
 // Custom definitions may go here
 // Include common definitions from above.
 apply from: '../build.common.gradle'
+repositories {
+    maven { url = 'https://maven.brott.dev/' }
+}
 dependencies {
+    implementation 'com.acmerobotics.dashboard:dashboard:0.4.3'
+
     /*
      * Other Modules
      */
