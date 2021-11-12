@@ -110,7 +110,16 @@ public class VisionDatasetsChecker
                  */
                 "/sdcard/FIRST/vision/UltimateGoal.xml",
                 "/sdcard/FIRST/vision/UltimateGoal.dat",
-                "/sdcard/FIRST/vision/UltimateGoal.tflite"};
+                "/sdcard/FIRST/vision/UltimateGoal.tflite",
+
+                /*
+                 * Freight Frenzy
+                 */
+                "/sdcard/FIRST/vision/FreightFrenzy.xml",
+                "/sdcard/FIRST/vision/FreightFrenzy.dat",
+                "/sdcard/FIRST/vision/FreightFrenzy_BC.tflite",
+                "/sdcard/FIRST/vision/FreightFrenzy_DM.tflite",
+                "/sdcard/FIRST/vision/FreightFrenzy_BCDM.tflite"};
 
         for(String s : files)
         {
@@ -125,7 +134,7 @@ public class VisionDatasetsChecker
 
     private static void showError(final String title, final String message)
     {
-        RobotLog.setGlobalWarningMessage(message);
+        RobotLog.addGlobalWarningMessage(message);
 
         if(LynxConstants.isRevControlHub())
         {
