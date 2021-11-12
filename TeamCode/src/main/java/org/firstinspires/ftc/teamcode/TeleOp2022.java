@@ -51,9 +51,9 @@ public class TeleOp2022 extends LinearOpMode {
     private DcMotor frontLeft;
     private DcMotor frontRight;
 
-    private DcMotorEx leftEncoder;
-    private DcMotorEx rightEncoder;
-    private DcMotorEx frontEncoder;
+//    private Encoder leftEncoder;
+//    private Encoder rightEncoder;
+//    private Encoder frontEncoder;
 
     //private Servo finger;
     //private DcMotorEx shooter;
@@ -103,16 +103,16 @@ public class TeleOp2022 extends LinearOpMode {
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
 
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontRight"));
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backLeft"));
-        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontLeft"));
+//        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontRight"));
+//        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backLeft"));
+//        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontLeft"));
 
 
         // Wait for the start button
         telemetry.addData(">", "Press Start to have a call to adventure.");
         telemetry.update();
 
-        gamepad1.setJoystickDeadzone(joystickDeadzone);
+        //gamepad1.setJoystickDeadzone(joystickDeadzone); It doesn't exist in this version
 
         waitForStart();
 
@@ -158,9 +158,9 @@ public class TeleOp2022 extends LinearOpMode {
 //            telemetry.addData("Joystick Angle", Math.toDegrees(robotAngle));
 //            telemetry.addData("Angles (XYZ)", Math.toDegrees(angles.thirdAngle) + ", " + Math.toDegrees(angles.secondAngle) + ", " + Math.toDegrees(angles.firstAngle));
 
-            telemetry.addData("Front Encoder", frontEncoder.getCurrentPosition());
-            telemetry.addData("Left Encoder", leftEncoder.getCurrentPosition());
-            telemetry.addData("Right Encoder", frontEncoder.getCurrentPosition());
+//            telemetry.addData("Front Encoder", frontEncoder.getCurrentPosition());
+//            telemetry.addData("Left Encoder", leftEncoder.getCurrentPosition());
+//            telemetry.addData("Right Encoder", frontEncoder.getCurrentPosition());
 
 
             double frontLeftPower = robotPower * Math.cos(robotAngle) + rightX;
