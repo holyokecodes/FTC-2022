@@ -1,18 +1,17 @@
 /*
-Copyright 2020 FIRST Tech Challenge Team 14853
+2020-2021 FIRST Tech Challenge Team 14853
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
-associated documentation files (the "Software"), to deal in the Software without restriction,http://192.168.49.1:8080/java/editor.html?/src/org/firstinspires/ftc/teamcode/MechanumDrive.java
+associated documentation files (the "Software"), to deal in the Software without restriction,
 including without limitation the rights to use, copy, modify, merge, publish, distribute,
 sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all copies or substantial
-portions of the Software.
+furnished to do so.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -27,6 +26,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
@@ -45,12 +45,8 @@ public class TeleOp2022 extends LinearOpMode {
     private DcMotor backRight;
     private DcMotor frontLeft;
     private DcMotor frontRight;
-
-
-
     private BNO055IMU imu;
     private ElapsedTime runtime = new ElapsedTime();
-
 
     @Override
     public void runOpMode() {
@@ -94,7 +90,6 @@ public class TeleOp2022 extends LinearOpMode {
                 telemetry.addData("Precise Mode", "Off");
             }
 
-
             Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
             double leftX = gamepad1.left_stick_x;
@@ -105,12 +100,7 @@ public class TeleOp2022 extends LinearOpMode {
             double robotAngle = Math.atan2(leftY, leftX) - Math.toRadians(225);
 
 //            telemetry.addData("Joystick Angle", Math.toDegrees(robotAngle));
-//            telemetry.addData("Angles (XYZ)", Math.toDegrees(angles.thirdAngle) + ", " + Math.toDegrees(angles.secondAngle) + ", " + Math.toDegrees(angles.firstAngle));
-
-//            telemetry.addData("Front Encoder", frontEncoder.getCurrentPosition());
-//            telemetry.addData("Left Encoder", leftEncoder.getCurrentPosition());
-//            telemetry.addData("Right Encoder", frontEncoder.getCurrentPosition());
-
+//            telemetry.addData("Angles (XYZ)", Math.toDegrees(angles.thirdAngle) + ", " + Math.toDegrees(angles.secondAngle) + ", " + Math.toDegrees(angles.firstAngle))
 
             double frontLeftPower = robotPower * Math.cos(robotAngle) + rightX;
             double frontRightPower = robotPower * Math.sin(robotAngle) - rightX;
@@ -124,6 +114,5 @@ public class TeleOp2022 extends LinearOpMode {
 
             telemetry.update();
         }
-
     }
 }
