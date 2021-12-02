@@ -45,6 +45,7 @@ public class TeleOp2022 extends LinearOpMode {
     private DcMotor backRight;
     private DcMotor frontLeft;
     private DcMotor frontRight;
+    private DcMotor carousel;
     private BNO055IMU imu;
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -54,6 +55,7 @@ public class TeleOp2022 extends LinearOpMode {
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
+        carousel = hardwareMap.get(DcMotor.class, "carousel");
 
         // Wait for the start button
         telemetry.addData(">", "Press Start to have a call to adventure.");
@@ -97,7 +99,7 @@ public class TeleOp2022 extends LinearOpMode {
             double rightX = gamepad1.right_stick_x;
 
             double robotPower = Math.hypot(leftX, leftY);
-            double robotAngle = Math.atan2(leftY, leftX) - Math.toRadians(225);
+            double robotAngle = Math.atan2(leftY, leftX) - Math.toRadians(45);
 
 //            telemetry.addData("Joystick Angle", Math.toDegrees(robotAngle));
 //            telemetry.addData("Angles (XYZ)", Math.toDegrees(angles.thirdAngle) + ", " + Math.toDegrees(angles.secondAngle) + ", " + Math.toDegrees(angles.firstAngle))
@@ -111,6 +113,12 @@ public class TeleOp2022 extends LinearOpMode {
             backRight.setPower(backRightPower * speedMultiplier);
             frontLeft.setPower(-frontLeftPower * speedMultiplier);
             frontRight.setPower(frontRightPower * speedMultiplier);
+
+            if (gamepad1.a) {
+                carousel.setPower(1);
+            } else {
+                carousel.setPower(0);
+            }
 
             telemetry.update();
         }

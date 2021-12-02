@@ -20,7 +20,7 @@ dependencies {
      * Other Modules
      */
     implementation project(':FtcRobotController') {
-        exclude group: 'org.firstinspires.ftc'
+//        exclude group: 'org.firstinspires.ftc'
     }
 
     implementation 'org.apache.commons:commons-math3:3.6.1'
