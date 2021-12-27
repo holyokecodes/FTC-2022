@@ -49,6 +49,17 @@ public class TeleOp2022 extends LinearOpMode {
     private BNO055IMU imu;
     private ElapsedTime runtime = new ElapsedTime();
 
+    public void moveServo(Servo servo, float speed, long time) {
+        servo.setPosition(speed);
+        long startTime = System.currentTimeMillis();
+        while (true) {
+            if (System.currentTimeMillis() - startTime >= time) {
+                break;
+            }
+        }
+        servo.setPosition(0.5)
+    }
+
     @Override
     public void runOpMode() {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
