@@ -13,19 +13,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 */
 
 package org.firstinspires.ftc.teamcode;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -39,13 +38,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove a @Disabled the on the next line or two (if present) to add this opmode to the Driver Station OpMode list,
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
-@TeleOp(name = "Tele-op 2022 ")
-public class TeleOp2022 extends LinearOpMode {
+@TeleOp(name = "Tele-op 2022 Arm")
+public class TeleOp2022Arm extends LinearOpMode {
     private DcMotor backLeft;
     private DcMotor backRight;
     private DcMotor frontLeft;
     private DcMotor frontRight;
     private DcMotor carousel;
+    private DcMotor arm;
+    private Servo grabber;
     private BNO055IMU imu;
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -56,7 +57,9 @@ public class TeleOp2022 extends LinearOpMode {
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         carousel = hardwareMap.get(DcMotor.class, "carousel");
-
+        arm = hardwareMap.get(DcMotor.class, "arm");
+        grabber = hardwareMap.get(Servo.class, "grabber");
+        boolean running = false;
 
         // Wait for the start button
         telemetry.addData(">", "Press Start to have a call to adventure.");
@@ -115,17 +118,30 @@ public class TeleOp2022 extends LinearOpMode {
             frontLeft.setPower(-frontLeftPower * speedMultiplier);
             frontRight.setPower(frontRightPower * speedMultiplier);
 
-            if (gamepad1.a) {
-                carousel.setPower(-.1);
-            } else {
+            if (gamepad2.x) {
+                carousel.setPower(-.18);
+            } else if (gamepad2.y) {
+                carousel.setPower(.18);
+            } else if (gamepad2.x&&gamepad2.y) {
+                carousel.setPower(0);
+                telemetry.addData("bruh", 0);
+            }else{
                 carousel.setPower(0);
             }
-            /*
-            * if(gamepad1.a){
-            *   running = !running;
-            * }
-            * carousel.setPower(running);
-            * */
+            arm.setPower(gamepad2.left_stick_x/2);
+
+            telemetry.addData("Grabber Position", grabber.getPosition());
+             if(gamepad2.a){
+                 grabber.setPosition(0);
+                 telemetry.addData("Button", "A");
+             }else if (gamepad2.b){
+                 grabber.setPosition(1);
+                 telemetry.addData("Button", "B");
+             }
+
+
+
+
             telemetry.update();
         }
     }
