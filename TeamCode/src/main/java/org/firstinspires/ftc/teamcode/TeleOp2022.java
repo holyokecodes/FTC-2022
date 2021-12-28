@@ -57,7 +57,7 @@ public class TeleOp2022 extends LinearOpMode {
                 break;
             }
         }
-        servo.setPosition(0.5)
+        servo.setPosition(0.5);
     }
 
     @Override

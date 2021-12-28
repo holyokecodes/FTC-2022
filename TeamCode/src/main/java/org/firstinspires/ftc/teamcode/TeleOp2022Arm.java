@@ -18,7 +18,8 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -46,9 +47,20 @@ public class TeleOp2022Arm extends LinearOpMode {
     private DcMotor frontRight;
     private DcMotor carousel;
     private DcMotor arm;
-    private Servo grabber;
+    private CRServo grabber;
     private BNO055IMU imu;
-    private ElapsedTime runtime = new ElapsedTime();
+
+    private void moveServo(CRServo servo, DcMotorSimple.Direction direction, double power, long time) {
+        servo.setDirection(direction);
+        servo.setPower(power);
+        long startTime = System.currentTimeMillis();
+        while (true) {
+            if (System.currentTimeMillis() - startTime >= time) {
+                break;
+            }
+        }
+        servo.setPower(0);
+    }
 
     @Override
     public void runOpMode() {
@@ -58,8 +70,7 @@ public class TeleOp2022Arm extends LinearOpMode {
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         carousel = hardwareMap.get(DcMotor.class, "carousel");
         arm = hardwareMap.get(DcMotor.class, "arm");
-        grabber = hardwareMap.get(Servo.class, "grabber");
-        boolean running = false;
+        grabber = hardwareMap.get(CRServo.class, "grabber");
 
         // Wait for the start button
         telemetry.addData(">", "Press Start to have a call to adventure.");
@@ -96,7 +107,7 @@ public class TeleOp2022Arm extends LinearOpMode {
                 telemetry.addData("Precise Mode", "Off");
             }
 
-            Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            //Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
             double leftX = gamepad1.left_stick_x;
             double leftY = gamepad1.left_stick_y;
@@ -122,27 +133,23 @@ public class TeleOp2022Arm extends LinearOpMode {
                 carousel.setPower(-.18);
             } else if (gamepad2.y) {
                 carousel.setPower(.18);
-            } else if (gamepad2.x&&gamepad2.y) {
-                carousel.setPower(0);
-                telemetry.addData("bruh", 0);
             }else{
                 carousel.setPower(0);
             }
             arm.setPower(gamepad2.left_stick_x/2);
-            if (arm.getCurrentPosition()<0.2){
+            /*if (arm.getCurrentPosition()<0.2){
                 arm.setTargetPosition(0.2);
             }else if (arm.getCurrentPosition()>0.8){
                 arm.setTargetPosition(0.8);
-            }
+            }*/
 
-            telemetry.addData("Grabber Position", grabber.getPosition());
-             if(gamepad2.a){
-                 grabber.setPosition(0);
-                 telemetry.addData("Button", "A");
-             }else if (gamepad2.b) {
-                 grabber.setPosition(1);
-                 telemetry.addData("Button", "B");
-             }
+            if(gamepad2.a){
+                moveServo(grabber, DcMotorSimple.Direction.FORWARD, 0.1, 300);
+                telemetry.addData("Button", "A");
+            }else if (gamepad2.b){
+                moveServo(grabber, DcMotorSimple.Direction.REVERSE, 0.1, 300);
+                telemetry.addData("Button", "B");
+            }
 
 
             telemetry.update();
