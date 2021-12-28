@@ -129,17 +129,20 @@ public class TeleOp2022Arm extends LinearOpMode {
                 carousel.setPower(0);
             }
             arm.setPower(gamepad2.left_stick_x/2);
+            if (arm.getCurrentPosition()<0.2){
+                arm.setTargetPosition(0.2);
+            }else if (arm.getCurrentPosition()>0.8){
+                arm.setTargetPosition(0.8);
+            }
 
             telemetry.addData("Grabber Position", grabber.getPosition());
              if(gamepad2.a){
                  grabber.setPosition(0);
                  telemetry.addData("Button", "A");
-             }else if (gamepad2.b){
+             }else if (gamepad2.b) {
                  grabber.setPosition(1);
                  telemetry.addData("Button", "B");
              }
-
-
 
 
             telemetry.update();
