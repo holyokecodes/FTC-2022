@@ -18,7 +18,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -47,10 +47,10 @@ public class TeleOp2022Arm extends LinearOpMode {
     private DcMotor frontRight;
     private DcMotor carousel;
     private DcMotor arm;
-    private CRServo grabber;
+    private Servo grabber;
     private BNO055IMU imu;
 
-    private void moveServo(CRServo servo, DcMotorSimple.Direction direction, double power, long time) {
+    /*private void moveServo(CRServo servo, DcMotorSimple.Direction direction, double power, float time) {
         servo.setDirection(direction);
         servo.setPower(power);
         long startTime = System.currentTimeMillis();
@@ -60,8 +60,23 @@ public class TeleOp2022Arm extends LinearOpMode {
             }
         }
         servo.setPower(0);
-    }
+    }*/
 
+    private void moveServo(Servo servo, double position, float time) {
+        servo.setPosition(position);
+        long startTime = System.currentTimeMillis();
+        while (true) {
+            if (System.currentTimeMillis() - startTime >= time) {
+                break;
+            }
+        }
+    }
+    private void openGrabber(float time){
+        moveServo(grabber, 0.45, time);
+    }
+    private void closeGrabber(float time){
+        moveServo(grabber, 0.55, time);
+    }
     @Override
     public void runOpMode() {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
@@ -70,7 +85,7 @@ public class TeleOp2022Arm extends LinearOpMode {
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         carousel = hardwareMap.get(DcMotor.class, "carousel");
         arm = hardwareMap.get(DcMotor.class, "arm");
-        grabber = hardwareMap.get(CRServo.class, "grabber");
+        grabber = hardwareMap.get(Servo.class, "grabber");
 
         // Wait for the start button
         telemetry.addData(">", "Press Start to have a call to adventure.");
@@ -144,13 +159,10 @@ public class TeleOp2022Arm extends LinearOpMode {
             }*/
 
             if(gamepad2.a){
-                moveServo(grabber, DcMotorSimple.Direction.FORWARD, 0.1, 300);
-                telemetry.addData("Button", "A");
+                openGrabber(300);
             }else if (gamepad2.b){
-                moveServo(grabber, DcMotorSimple.Direction.REVERSE, 0.1, 300);
-                telemetry.addData("Button", "B");
+                closeGrabber(300);
             }
-
 
             telemetry.update();
         }
