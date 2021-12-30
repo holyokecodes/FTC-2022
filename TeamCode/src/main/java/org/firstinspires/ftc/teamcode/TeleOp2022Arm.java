@@ -50,8 +50,7 @@ public class TeleOp2022Arm extends LinearOpMode {
     private Servo grabber;
     private BNO055IMU imu;
 
-    /*private void moveServo(CRServo servo, DcMotorSimple.Direction direction, double power, float time) {
-        servo.setDirection(direction);
+    /*private void moveServoPower(CRServo servo, double power, float time) {
         servo.setPower(power);
         long startTime = System.currentTimeMillis();
         while (true) {
@@ -71,6 +70,7 @@ public class TeleOp2022Arm extends LinearOpMode {
             }
         }
     }
+
     private void openGrabber(float time){
         moveServo(grabber, 0.45, time);
     }
