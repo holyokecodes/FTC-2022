@@ -1,3 +1,4 @@
+
 /*
 2020-2021 FIRST Tech Challenge Team 14853
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,13 +20,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -49,6 +43,9 @@ public class TeleOp2022Arm extends LinearOpMode {
     private DcMotor arm;
     private Servo grabber;
     private BNO055IMU imu;
+
+    private int[] armPositions = {0, -50, -125, -225, -325};
+    private int currentArmPosition = 0;
 
     /*private void moveServoPower(CRServo servo, double power, float time) {
         servo.setPower(power);
@@ -88,7 +85,7 @@ public class TeleOp2022Arm extends LinearOpMode {
         grabber = hardwareMap.get(Servo.class, "grabber");
 
         // Wait for the start button
-        telemetry.addData(">", "Press Start to have a call to adventure.");
+        telemetry.addData(">", "Press Start to energize the robot with electrons that make it MOVE!");
         telemetry.update();
 
         waitForStart();
@@ -110,8 +107,13 @@ public class TeleOp2022Arm extends LinearOpMode {
         telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+
+        //initialize arm
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             double speedMultiplier = 1; //Multiplier for precision mode.
@@ -151,19 +153,24 @@ public class TeleOp2022Arm extends LinearOpMode {
             }else{
                 carousel.setPower(0);
             }
-            arm.setPower(gamepad2.left_stick_x/2);
-            /*if (arm.getCurrentPosition()<0.2){
-                arm.setTargetPosition(0.2);
-            }else if (arm.getCurrentPosition()>0.8){
-                arm.setTargetPosition(0.8);
-            }*/
+
+            //handles arm movement
+            //telemetry.addData("Ticks", arm.getCurrentPosition());
+            telemetry.addData("Current Arm Position", currentArmPosition);
 
             if(gamepad2.a){
-                openGrabber(300);
-            }else if (gamepad2.b){
-                closeGrabber(300);
+                //currentArmPosition = Math.min(currentArmPosition +1, armPositions.length);
+                if(currentArmPosition<armPositions.length-1){
+                    currentArmPosition++;
+                }
+            }else if (gamepad2.b) {
+                //currentArmPosition = Math.max(currentArmPosition - 1, 0);
+                if(currentArmPosition>0){
+                    currentArmPosition--;
+                }
             }
-
+            telemetry.addData("Current Arm Position if", currentArmPosition);
+            //arm.setTargetPosition(armPositions[currentArmPosition]);
             telemetry.update();
         }
     }
