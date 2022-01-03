@@ -46,6 +46,8 @@ public class TeleOp2022Arm extends LinearOpMode {
 
     private int[] armPositions = {0, -50, -125, -225, -325};
     private int currentArmPosition = 0;
+    private boolean aPressed = false;
+    private boolean bPressed = false;
 
     /*private void moveServoPower(CRServo servo, double power, float time) {
         servo.setPower(power);
@@ -84,12 +86,6 @@ public class TeleOp2022Arm extends LinearOpMode {
         arm = hardwareMap.get(DcMotor.class, "arm");
         grabber = hardwareMap.get(Servo.class, "grabber");
 
-        // Wait for the start button
-        telemetry.addData(">", "Press Start to energize the robot with electrons that make it MOVE!");
-        telemetry.update();
-
-        waitForStart();
-
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.mode = BNO055IMU.SensorMode.IMU;
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
@@ -105,14 +101,18 @@ public class TeleOp2022Arm extends LinearOpMode {
         }
 
         telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
 
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+        // Wait for the start button
+        telemetry.addData(">", "Press Start to energize the robot with electrons that make it MOVE!");
+        telemetry.update();
 
         //initialize arm
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //arm.setTargetPosition(0);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -158,20 +158,37 @@ public class TeleOp2022Arm extends LinearOpMode {
             //telemetry.addData("Ticks", arm.getCurrentPosition());
             telemetry.addData("Current Arm Position", currentArmPosition);
 
-            if(gamepad2.a){
+            if(gamepad2.a && !aPressed){
                 //currentArmPosition = Math.min(currentArmPosition +1, armPositions.length);
                 if(currentArmPosition<armPositions.length-1){
                     currentArmPosition++;
                 }
-            }else if (gamepad2.b) {
+                arm.setTargetPosition(armPositions[currentArmPosition]);
+                arm.setPower(-.1);
+                aPressed = true;
+                bPressed = false;
+            }else if (gamepad2.b && !bPressed) {
                 //currentArmPosition = Math.max(currentArmPosition - 1, 0);
                 if(currentArmPosition>0){
                     currentArmPosition--;
                 }
+                arm.setTargetPosition(armPositions[currentArmPosition]);
+                arm.setPower(.1);
+                aPressed = false;
+                bPressed = true;
+            }else{
+            //    arm.setPower(0);
+                aPressed = false;
+                bPressed = false;
             }
-            telemetry.addData("Current Arm Position if", currentArmPosition);
-            //arm.setTargetPosition(armPositions[currentArmPosition]);
+
+
+            //telemetry.addData("Current Arm Position if", currentArmPosition);
+            telemetry.addData("Current Position", arm.getCurrentPosition());
+            telemetry.addData("Projected Position", armPositions[currentArmPosition]);
             telemetry.update();
+
+            idle();
         }
     }
 }
