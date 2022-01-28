@@ -18,8 +18,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -33,15 +33,15 @@ import com.qualcomm.robotcore.hardware.CRServo;
  * Remove a @Disabled the on the next line or two (if present) to add this opmode to the Driver Station OpMode list,
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
-@TeleOp(name = "Tele-op 2022")
-public class TeleOp2022 extends LinearOpMode {
+@TeleOp(name = "Tele-op 2022 MECHANUM ONLY")
+public class TeleopMechanum extends LinearOpMode {
     private DcMotor backLeft;
     private DcMotor backRight;
     private DcMotor frontLeft;
     private DcMotor frontRight;
-    private DcMotor carousel;
-    private DcMotor arm;
-    private CRServo grabber;
+    //private DcMotor carousel;
+    //private DcMotor arm;
+    //private CRServo grabber;
     private BNO055IMU imu;
 
     private int[] armPositions = {0, -50, -125, -225, -325};
@@ -82,9 +82,9 @@ public class TeleOp2022 extends LinearOpMode {
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        carousel = hardwareMap.get(DcMotor.class, "carousel");
-        arm = hardwareMap.get(DcMotor.class, "arm");
-        grabber = hardwareMap.get(CRServo.class, "grabber");
+        //carousel = hardwareMap.get(DcMotor.class, "carousel");
+        //arm = hardwareMap.get(DcMotor.class, "arm");
+        //grabber = hardwareMap.get(CRServo.class, "grabber");
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.mode = BNO055IMU.SensorMode.IMU;
@@ -107,10 +107,10 @@ public class TeleOp2022 extends LinearOpMode {
         telemetry.update();
 
         //initialize arm
-        arm.setTargetPosition(0);
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //arm.setTargetPosition(0);
+        //arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
 
@@ -146,7 +146,7 @@ public class TeleOp2022 extends LinearOpMode {
             backRight.setPower(backRightPower * speedMultiplier);
             frontLeft.setPower(-frontLeftPower * speedMultiplier);
             frontRight.setPower(frontRightPower * speedMultiplier);
-
+/*
             if (gamepad2.x) {
                 carousel.setPower(-0.8);
             } else if (gamepad2.y) {
@@ -194,7 +194,7 @@ public class TeleOp2022 extends LinearOpMode {
             telemetry.addData("Current Position", arm.getCurrentPosition());
             telemetry.addData("Projected Position", armPositions[currentArmPosition]);
             telemetry.update();
-
+*/
             idle();
         }
     }
