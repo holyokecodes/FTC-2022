@@ -15,24 +15,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
 
-/**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Remove a @Disabled the on the next line or two (if present) to add this opmode to the Driver Station OpMode list,
- * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
- */
 @TeleOp(name = "Tele-op 2022")
 public class TeleOp2022 extends LinearOpMode {
     private DcMotor backLeft;
@@ -85,7 +72,6 @@ public class TeleOp2022 extends LinearOpMode {
         arm = hardwareMap.get(DcMotor.class, "arm");
         grabber = hardwareMap.get(CRServo.class, "grabber");
 
-
         // Wait for the start button
         telemetry.addData(">", "Press Start to energize the robot with electrons that make it MOVE!");
         telemetry.update();
@@ -98,7 +84,6 @@ public class TeleOp2022 extends LinearOpMode {
 
         waitForStart();
 
-
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             double speedMultiplier = 1; //Multiplier for precision mode.
@@ -108,8 +93,6 @@ public class TeleOp2022 extends LinearOpMode {
             } else {
                 telemetry.addData("Precise Mode", "Off");
             }
-
-            //Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
             double leftX = gamepad1.left_stick_x;
             double leftY = gamepad1.left_stick_y;
@@ -144,7 +127,6 @@ public class TeleOp2022 extends LinearOpMode {
             telemetry.addData("Current Arm Position", currentArmPosition);
 
             if(gamepad2.a && !aPressed){
-                //currentArmPosition = Math.min(currentArmPosition +1, armPositions.length);
                 if(currentArmPosition<armPositions.length-1){
                     currentArmPosition++;
                 }
@@ -152,7 +134,6 @@ public class TeleOp2022 extends LinearOpMode {
                 arm.setPower(-.1);
                 aPressed = true;
             }else if (gamepad2.b && !bPressed) {
-                //currentArmPosition = Math.max(currentArmPosition - 1, 0);
                 if(currentArmPosition>0){
                     currentArmPosition--;
                 }
@@ -174,7 +155,6 @@ public class TeleOp2022 extends LinearOpMode {
                 grabber.setPower(0);
             }
 
-            //telemetry.addData("Current Arm Position if", currentArmPosition);
             telemetry.addData("Current Position", arm.getCurrentPosition());
             telemetry.addData("Projected Position", armPositions[currentArmPosition]);
             telemetry.update();
