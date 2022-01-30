@@ -42,7 +42,6 @@ public class TeleOp2022 extends LinearOpMode {
     private DcMotor carousel;
     private DcMotor arm;
     private CRServo grabber;
-    private BNO055IMU imu;
 
     private int[] armPositions = {0, -50, -125, -225, -325};
     private int currentArmPosition = 0;
@@ -86,21 +85,6 @@ public class TeleOp2022 extends LinearOpMode {
         arm = hardwareMap.get(DcMotor.class, "arm");
         grabber = hardwareMap.get(CRServo.class, "grabber");
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.mode = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled = false;
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-
-        while (!isStopRequested() && !imu.isGyroCalibrated()) {
-            sleep(50);
-            idle();
-        }
-
-        telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
 
         // Wait for the start button
         telemetry.addData(">", "Press Start to energize the robot with electrons that make it MOVE!");
