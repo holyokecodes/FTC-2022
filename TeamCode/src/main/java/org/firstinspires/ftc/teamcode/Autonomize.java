@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 import java.util.List;
@@ -27,14 +28,24 @@ public class Autonomize extends LinearOpMode {
 
     private Pose2d shippingHub = new Pose2d(20, 20, Math.toRadians(180)); //Where the robot is after going to zone c
 
+
     Trajectory shippingHubTraj;
+    Trajectory duckTraj;
 
     @Override
     public void runOpMode() {
         drivetrain = new SampleMecanumDrive(hardwareMap);
 
         shippingHubTraj = drivetrain.trajectoryBuilder(new Pose2d(-36, -60, Math.toRadians(90)))
-                .splineToConstantHeading(new Vector2d(-12, -40), Math.toRadians(90))
+                .splineTo(new Vector2d(-12, -40), Math.toRadians(90))
+                .splineTo(new Vector2d(-60, -50),
+                            0,
+                                       SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                                       SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .build();
+
+        duckTraj = drivetrain.trajectoryBuilder(new Pose2d(-12, -40, Math.toRadians(90)))
+
                 .build();
 
 
