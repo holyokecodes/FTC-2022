@@ -19,6 +19,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp(name = "Tele-op 2022")
 public class TeleOp2022 extends LinearOpMode {
@@ -35,33 +36,6 @@ public class TeleOp2022 extends LinearOpMode {
     private boolean aPressed = false;
     private boolean bPressed = false;
 
-    /*private void moveServoPower(CRServo servo, double power, float time) {
-        servo.setPower(power);
-        long startTime = System.currentTimeMillis();
-        while (true) {
-            if (System.currentTimeMillis() - startTime >= time) {
-                break;
-            }
-        }
-        servo.setPower(0);
-    }
-
-    private void moveServo(Servo servo, double position, float time) {
-        servo.setPosition(position);
-        long startTime = System.currentTimeMillis();
-        while (true) {
-            if (System.currentTimeMillis() - startTime >= time) {
-                break;
-            }
-        }
-    }
-
-    private void openGrabber(float time){
-        moveServo(grabber, 0.35, time);
-    }
-    private void closeGrabber(float time){
-        moveServo(grabber, 0.55, time);
-    }*/
     @Override
     public void runOpMode() {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
@@ -75,6 +49,9 @@ public class TeleOp2022 extends LinearOpMode {
         // Wait for the start button
         telemetry.addData(">", "Press Start to energize the robot with electrons that make it MOVE!");
         telemetry.update();
+
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //initialize arm
         arm.setTargetPosition(0);
@@ -95,23 +72,18 @@ public class TeleOp2022 extends LinearOpMode {
             }
 
             double leftX = gamepad1.left_stick_x;
-            double leftY = gamepad1.left_stick_y;
+            double lefty = -gamepad1.left_stick_y;
             double rightX = gamepad1.right_stick_x;
 
-            double robotPower = Math.hypot(leftX, leftY);
-            double robotAngle = Math.atan2(leftY, leftX) - Math.toRadians(45);
+            double denominator = Math.max(Math.abs(lefty) + Math.abs(leftX) + Math.abs(rightX), 1);
+            double frontLeftPower = (lefty + leftX + rightX) / denominator;
+            double backLeftPower = (lefty - leftX + rightX) / denominator;
+            double frontRightPower = (lefty - leftX - rightX) / denominator;
+            double backRightPower = (lefty + leftX - rightX) / denominator;
 
-//            telemetry.addData("Joystick Angle", Math.toDegrees(robotAngle));
-//            telemetry.addData("Angles (XYZ)", Math.toDegrees(angles.thirdAngle) + ", " + Math.toDegrees(angles.secondAngle) + ", " + Math.toDegrees(angles.firstAngle))
-
-            double frontLeftPower = robotPower * Math.cos(robotAngle) + rightX;
-            double frontRightPower = robotPower * Math.sin(robotAngle) - rightX;
-            double backLeftPower = robotPower * Math.sin(robotAngle) + rightX;
-            double backRightPower = robotPower * Math.cos(robotAngle) - rightX;
-
-            backLeft.setPower(-backLeftPower * speedMultiplier);
+            backLeft.setPower(backLeftPower * speedMultiplier);
             backRight.setPower(backRightPower * speedMultiplier);
-            frontLeft.setPower(-frontLeftPower * speedMultiplier);
+            frontLeft.setPower(frontLeftPower * speedMultiplier);
             frontRight.setPower(frontRightPower * speedMultiplier);
 
             if (gamepad2.x) {
