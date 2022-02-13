@@ -23,7 +23,7 @@ import java.util.List;
 
 @Autonomous(name="Autonomous 2022 Red A")
 
-public class Autonomize extends LinearOpMode {
+public class AutonomizeRedA extends LinearOpMode {
     SampleMecanumDrive drivetrain;
 
     private DcMotor carousel;
@@ -49,26 +49,32 @@ public class Autonomize extends LinearOpMode {
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         TrajectorySequence trajSeq = drivetrain.trajectorySequenceBuilder(startPose)
+                .addTemporalMarker(() -> grabber.setPower(.1))
                 // Raise arm
                 .addTemporalMarker(() -> arm.setPower(-.1))
                 .addTemporalMarker(() -> arm.setTargetPosition(-325))
                 .waitSeconds(2)
                 // Goto shipping hub
-                .lineTo(new Vector2d(-6,-32))
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
+                .lineTo(new Vector2d(-6,-29))
                 // Drop cargo
                 .addTemporalMarker(() -> grabber.setPower(-.1))
                 .waitSeconds(.5)
                 .addTemporalMarker(() -> grabber.setPower(0))
                 // Goto carousel
+                .resetVelConstraint()
                 .lineTo(new Vector2d(-70,-54))
-                .turn(Math.toRadians(30))
-                .back(5)
+                //.turn(Math.toRadians(-30))
+                .UNSTABLE_addDisplacementMarkerOffset(0.5,() -> carousel.setPower(-.8))
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
+                .back(75)
                 // Spin duck carousel
-                .addTemporalMarker(() -> carousel.setPower(-.8))
-                .waitSeconds(4)
+                //.waitSeconds(4)
                 .addTemporalMarker(() -> carousel.setPower(0))
+                .addTemporalMarker(() -> grabber.setPower(.1))
+                .waitSeconds(.5)
+                .addTemporalMarker(() -> grabber.setPower(0))
                 .build();
-
 
         telemetry.addData(">", "Press Play to start op mode, amd wait for the movement of the robot.");
         telemetry.update();
