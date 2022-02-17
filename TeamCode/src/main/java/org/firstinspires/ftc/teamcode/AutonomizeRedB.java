@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 
 @Autonomous(name="Autonomous 2022 Red B")
-
 public class AutonomizeRedB extends LinearOpMode {
     SampleMecanumDrive drivetrain;
 
@@ -29,7 +28,7 @@ public class AutonomizeRedB extends LinearOpMode {
         arm = hardwareMap.get(DcMotor.class, "arm");
         grabber = hardwareMap.get(CRServo.class, "grabber");
 
-        Pose2d startPose = new Pose2d(15, -60, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(18, -56, Math.toRadians(90));
 
         drivetrain.setPoseEstimate(startPose);
 
@@ -47,25 +46,18 @@ public class AutonomizeRedB extends LinearOpMode {
                 .waitSeconds(2)
                 // Goto shipping hub
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
-                .lineTo(new Vector2d(-6,-29))
+                .lineTo(new Vector2d(-7,-24))
                 // Drop cargo
                 .addTemporalMarker(() -> grabber.setPower(-.1))
                 .waitSeconds(.5)
                 .addTemporalMarker(() -> grabber.setPower(0))
-                // Goto carousel
+                // Goto warehouse
                 .resetVelConstraint()
-                .lineTo(new Vector2d(-70,-54))
-                //.turn(Math.toRadians(-30))
-                .UNSTABLE_addDisplacementMarkerOffset(0.5,() -> carousel.setPower(-.8))
-                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
-                .back(75)
-                // Spin duck carousel
-                //.waitSeconds(4)
-                .addTemporalMarker(() -> carousel.setPower(0))
-                .addTemporalMarker(() -> grabber.setPower(.1))
-                .waitSeconds(.5)
-                .addTemporalMarker(() -> grabber.setPower(0))
+                .lineTo(new Vector2d(8,-64))
+                .lineTo(new Vector2d(67,-64))
+                .turn(Math.toRadians(-90))
                 .build();
+
 
         telemetry.addData(">", "Press Play to start op mode, amd wait for the movement of the robot.");
         telemetry.update();

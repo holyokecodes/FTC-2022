@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 
-@Autonomous(name="Autonomous 2022 Red A")
-public class AutonomizeRedA extends LinearOpMode {
+@Autonomous(name="Autonomous 2022 Blue A")
+public class AutonomizeBlueA extends LinearOpMode {
     SampleMecanumDrive drivetrain;
 
     private DcMotor carousel;
@@ -28,7 +28,7 @@ public class AutonomizeRedA extends LinearOpMode {
         arm = hardwareMap.get(DcMotor.class, "arm");
         grabber = hardwareMap.get(CRServo.class, "grabber");
 
-        Pose2d startPose = new Pose2d(-36, -60, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(-36, 60, Math.toRadians(270));
 
         drivetrain.setPoseEstimate(startPose);
 
@@ -46,19 +46,21 @@ public class AutonomizeRedA extends LinearOpMode {
                 .waitSeconds(2)
                 // Goto shipping hub
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
-                .lineTo(new Vector2d(-6,-29))
+                .lineTo(new Vector2d(-10,22))
                 // Drop cargo
                 .addTemporalMarker(() -> grabber.setPower(-.1))
                 .waitSeconds(.5)
                 .addTemporalMarker(() -> grabber.setPower(0))
                 // Goto carousel
                 .resetVelConstraint()
-                .lineTo(new Vector2d(-80,-54))
+                .lineTo(new Vector2d(-60,40))
+                .turn(Math.toRadians(90))
+                .lineTo(new Vector2d(-80,40))
                 //.turn(Math.toRadians(-30))
-                .UNSTABLE_addDisplacementMarkerOffset(0.5,() -> carousel.setPower(-.8))
+                .UNSTABLE_addDisplacementMarkerOffset(0.5,() -> carousel.setPower(.8))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
-                .back(75)
-                .forward(18)
+                .strafeLeft(75)
+                .strafeRight(28)
                 // Spin duck carousel
                 //.waitSeconds(4)
                 .addTemporalMarker(() -> carousel.setPower(0))
