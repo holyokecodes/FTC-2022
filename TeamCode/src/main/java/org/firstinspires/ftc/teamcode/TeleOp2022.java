@@ -31,10 +31,10 @@ public class TeleOp2022 extends LinearOpMode {
     private DcMotor arm;
     private CRServo grabber;
 
-    private int[] armPositions = {0, -50, -125, -225, -325};
+    private int[] armPositions = {0, -100, -325};
     private int currentArmPosition = 0;
-    private boolean aPressed = false;
     private boolean bPressed = false;
+    private boolean aPressed = false;
 
     @Override
     public void runOpMode() {
@@ -72,14 +72,14 @@ public class TeleOp2022 extends LinearOpMode {
             }
 
             double leftX = gamepad1.left_stick_x;
-            double lefty = -gamepad1.left_stick_y;
-            double rightX = gamepad1.right_stick_x;
+            double leftY = -gamepad1.left_stick_y;
+            double rightX = gamepad1.right_stick_x/2;
 
-            double denominator = Math.max(Math.abs(lefty) + Math.abs(leftX) + Math.abs(rightX), 1);
-            double frontLeftPower = (lefty + leftX + rightX) / denominator;
-            double backLeftPower = (lefty - leftX + rightX) / denominator;
-            double frontRightPower = (lefty - leftX - rightX) / denominator;
-            double backRightPower = (lefty + leftX - rightX) / denominator;
+            double denominator = Math.max(Math.abs(leftY) + Math.abs(leftX) + Math.abs(rightX), 1);
+            double frontLeftPower = (leftY + leftX + rightX) / denominator;
+            double backLeftPower = (leftY - leftX + rightX) / denominator;
+            double frontRightPower = (leftY - leftX - rightX) / denominator;
+            double backRightPower = (leftY + leftX - rightX) / denominator;
 
             backLeft.setPower(backLeftPower * speedMultiplier);
             backRight.setPower(backRightPower * speedMultiplier);
@@ -98,20 +98,20 @@ public class TeleOp2022 extends LinearOpMode {
             //telemetry.addData("Ticks", arm.getCurrentPosition());
             telemetry.addData("Current Arm Position", currentArmPosition);
 
-            if(gamepad2.a && !aPressed){
+            if(gamepad2.b && !bPressed){
                 if(currentArmPosition<armPositions.length-1){
                     currentArmPosition++;
                 }
                 arm.setTargetPosition(armPositions[currentArmPosition]);
                 arm.setPower(-.1);
-                aPressed = true;
-            }else if (gamepad2.b && !bPressed) {
+                bPressed = true;
+            }else if (gamepad2.a && !aPressed) {
                 if(currentArmPosition>0){
                     currentArmPosition--;
                 }
                 arm.setTargetPosition(armPositions[currentArmPosition]);
                 arm.setPower(.1);
-                bPressed = true;
+                aPressed = true;
             }
 
             aPressed = gamepad2.a;

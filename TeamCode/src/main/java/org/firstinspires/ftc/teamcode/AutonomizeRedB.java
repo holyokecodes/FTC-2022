@@ -46,15 +46,17 @@ public class AutonomizeRedB extends LinearOpMode {
                 .waitSeconds(2)
                 // Goto shipping hub
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
-                .lineTo(new Vector2d(-7,-24))
+                .forward(48)
+                .turn(Math.toRadians(80))
                 // Drop cargo
                 .addTemporalMarker(() -> grabber.setPower(-.1))
                 .waitSeconds(.5)
+                .turn(Math.toRadians(-85))
+                .back(48)
                 .addTemporalMarker(() -> grabber.setPower(0))
                 // Goto warehouse
                 .resetVelConstraint()
-                .lineTo(new Vector2d(8,-64))
-                .lineTo(new Vector2d(67,-64))
+                .lineTo(new Vector2d(52,-64))
                 .turn(Math.toRadians(-90))
                 .build();
 
